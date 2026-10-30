@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pizarra táctica · Volleyball Bulls</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b1220;--panel:#141d30;--panel2:#1c2740;--ink:#f1f5f9;--mut:#9fb0c8;--line:#2b3a58;--acc:#f4b942;--acc2:#ff7a3d;--onacc:#1a1204;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#eef2f7;--panel:#fff;--panel2:#e6ecf4;--ink:#0f172a;--mut:#51627d;--line:#c9d4e3;--acc:#b86e00;--acc2:#d9480f;--onacc:#fff}}
+:root[data-theme="light"]{--bg:#eef2f7;--panel:#fff;--panel2:#e6ecf4;--ink:#0f172a;--mut:#51627d;--line:#c9d4e3;--acc:#b86e00;--acc2:#d9480f;--onacc:#fff}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:500 16px/1.5 Barlow,system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:1120px;margin:0 auto;padding:14px}
+header{display:flex;flex-wrap:wrap;gap:14px 22px;align-items:center;justify-content:space-between;padding:16px 20px;background:var(--panel);border:1px solid var(--line);border-left:6px solid var(--acc);border-radius:14px}
+.brand{display:flex;align-items:center;gap:14px;min-width:0}
+.brand svg{flex:none;width:52px;height:52px}
+h1{margin:0;font:800 clamp(24px,4.6vw,38px)/1 "Barlow Condensed","Arial Narrow",sans-serif;letter-spacing:.01em}
+.sub{color:var(--mut);font-size:14px;margin-top:4px}
+.bulls{display:flex;align-items:center;gap:10px;padding:8px 18px 8px 12px;border-radius:999px 999px 999px 8px;background:linear-gradient(135deg,var(--acc),var(--acc2));color:var(--onacc);font:800 22px/1 "Barlow Condensed",sans-serif;letter-spacing:.04em;transform:rotate(-1.5deg);box-shadow:0 6px 18px rgba(255,122,61,.28)}
+.bulls i{font-style:normal;display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--onacc);color:var(--acc);font-size:18px}
+.coach{text-align:right;font-size:14px;line-height:1.35}
+.coach b{display:block;font:700 20px/1.1 "Barlow Condensed",sans-serif}
+.coach span{color:var(--mut)}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:14px 0 10px;padding:10px;background:var(--panel);border:1px solid var(--line);border-radius:14px}
+.grp{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding-right:10px;border-right:1px solid var(--line)}
+.grp:last-child{border:0;padding:0}
+button,select{font:600 14px Barlow,system-ui,sans-serif;color:var(--ink);background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:8px 12px;min-height:40px;cursor:pointer}
+button:hover,select:hover{border-color:var(--acc)}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+button[aria-pressed="true"]{background:var(--acc);color:var(--onacc);border-color:var(--acc)}
+.sw{width:28px;height:28px;min-height:0;padding:0;border-radius:50%;border:2px solid var(--line)}
+.sw[aria-pressed="true"]{outline:3px solid var(--acc);outline-offset:1px;border-color:#fff}
+input[type=color]{width:34px;height:34px;padding:0;border:1px solid var(--line);border-radius:8px;background:none}
+input[type=range]{width:90px;accent-color:var(--acc)}
+label.tg{display:flex;align-items:center;gap:6px;font-size:14px;cursor:pointer;padding:4px 6px}
+label.tg input{width:18px;height:18px;accent-color:var(--acc)}
+.small{font-size:12px;color:var(--mut)}
+.export{background:linear-gradient(135deg,var(--acc),var(--acc2));color:var(--onacc);border:0;font-weight:700;padding:8px 18px;margin-left:auto}
+.boardbox{background:#0a2733;border:1px solid var(--line);border-radius:14px;padding:6px;box-shadow:0 14px 40px rgba(0,0,0,.28)}
+#board{display:block;width:100%;height:auto;touch-action:none;user-select:none;-webkit-user-select:none;border-radius:10px}
+#board.mv .tok,#board.mv #ball{cursor:grab}
+#board:not(.mv) .tok,#board:not(.mv) #ball{pointer-events:none}
+#board:not(.mv){cursor:crosshair}
+#board.er .stk,#board.er .stk *{pointer-events:stroke}
+.tok.anim,#ball.anim{transition:transform .5s ease}
+.hint{margin:8px 4px 0;color:var(--mut);font-size:14px}
+section.nom{margin-top:22px}
+h2{font:700 26px/1.1 "Barlow Condensed",sans-serif;margin:0 0 12px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.card b{display:flex;align-items:center;gap:8px;font:700 19px/1.1 "Barlow Condensed",sans-serif;margin-bottom:6px}
+.card b em{font-style:normal;display:grid;place-items:center;min-width:38px;height:28px;padding:0 6px;border-radius:14px;background:var(--acc);color:var(--onacc);font-size:16px}
+.card p{margin:0;font-size:14px;color:var(--mut)}
+.zrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-top:10px}
+.zrow .card{border-left:4px solid var(--acc)}
+#modal{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.8)}
+#modal.on{display:flex}
+#modal div{max-width:960px;width:100%;background:var(--panel);border-radius:14px;padding:14px;text-align:center}
+#modal img{max-width:100%;max-height:68vh;border-radius:8px}
+footer{margin:22px 0 8px;text-align:center;color:var(--mut);font-size:13px}
+@media (max-width:640px){.coach{text-align:left}.grp{border:0;padding:0}.export{margin-left:0;width:100%}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="brand">
+    <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="none" stroke="#f4b942" stroke-width="3"/><g fill="#ff7a3d"><path d="M32 10c6 8 6 16 0 24-6-8-6-16 0-24z"/><path d="M14 22c10 0 17 5 18 14-10 0-17-5-18-14z" fill="#f4b942"/><path d="M50 22c-10 0-17 5-18 14 10 0 17-5 18-14z" fill="#f4b942"/></g><path d="M18 44c8 6 20 6 28 0-4 8-10 10-14 10s-10-2-14-10z" fill="#ff7a3d"/></svg>
+    <div><h1>Durga Wellness Sport &amp; Recreation</h1><div class="sub">Pizarra táctica de voleibol</div></div>
+  </div>
+  <div class="bulls"><i>🏐</i>Volleyball Bulls</div>
+  <div class="coach"><b>Prof. Säriel R.S.</b><span>Educador Físico<br>Volleyball Coach &amp; Basketball Coach</span></div>
+</header>
+
+<div class="bar" role="toolbar" aria-label="Herramientas">
+  <div class="grp" id="modes">
+    <button data-m="move" aria-pressed="true">Mover</button>
+    <button data-m="pen" aria-pressed="false">Lápiz</button>
+    <button data-m="arrow" aria-pressed="false">Flecha</button>
+    <button data-m="erase" aria-pressed="false">Borrador</button>
+  </div>
+  <div class="grp" id="colors" aria-label="Color y grosor"></div>
+  <div class="grp">
+    <label class="small" for="w">Grosor</label><input type="range" id="w" min="2" max="14" value="5">
+  </div>
+  <div class="grp">
+    <button id="undo">Deshacer</button><button id="clear">Borrar trazos</button>
+  </div>
+</div>
+<div class="bar">
+  <div class="grp">
+    <select id="fm" aria-label="Formación">
+      <option value="base">Posición base (zonas)</option>
+      <optgroup label="K1 · Recepción">
+        <option value="recv">K1 · Recepción 5-1 en W</option>
+      </optgroup>
+      <optgroup label="K2 · Bloqueo y defensa">
+        <option value="blk2">K2 · Bloqueo doble + defensa perímetro</option>
+        <option value="blk1">K2 · Bloqueo simple + defensa en profundidad</option>
+      </optgroup>
+    </select>
+    <select id="rot" aria-label="Rotación">
+      <option value="0">R1 · Armador en Z1</option><option value="1">R2 · Armador en Z6</option><option value="2">R3 · Armador en Z5</option>
+      <option value="3">R4 · Armador en Z4</option><option value="4">R5 · Armador en Z3</option><option value="5">R6 · Armador en Z2</option>
+    </select>
+    <select id="tm" aria-label="Aplicar a">
+      <option value="both">Ambos equipos</option><option value="blue">Solo Azul</option><option value="red">Solo Rojo</option>
+    </select>
+    <button id="reset">Reiniciar</button>
+  </div>
+  <div class="grp">
+    <label class="tg"><input type="checkbox" id="lz" checked>Zonas</label>
+    <label class="tg"><input type="checkbox" id="lp" checked>Posiciones</label>
+  </div>
+  <button class="export" id="exp">Exportar jugada (PNG)</button>
+</div>
+
+<div class="boardbox"><svg id="board" class="mv" viewBox="0 0 1020 570" role="img" aria-label="Cancha de voleibol vista superior con 9 zonas por lado"></svg></div>
+<p class="hint">Mover: arrastra fichas y balón. Lápiz y Flecha: dibuja sobre la cancha. Borrador: toca o pasa sobre un trazo. Cada equipo ve sus zonas desde su propio lado de la red, con Z4 a su izquierda.</p>
+
+<section class="nom">
+  <h2>Nomenclatura de posiciones</h2>
+  <div class="cards">
+    <div class="card"><b><em>S</em>Setter · Armador</b><p>Dirige el ataque. Recibe el segundo toque y reparte el balón a los atacantes.</p></div>
+    <div class="card"><b><em>OH</em>Outside Hitter · Punta</b><p>Ataca principalmente por Z4. Recibe, defiende y resuelve balones difíciles.</p></div>
+    <div class="card"><b><em>MB</em>Middle Blocker · Central</b><p>Bloquea al centro de la red y ataca rápido por Z3. Sale en la línea de fondo cuando entra el líbero.</p></div>
+    <div class="card"><b><em>OP</em>Opposite · Opuesto</b><p>Ataca por Z2 y desde atrás. Se ubica enfrente del armador en la rotación.</p></div>
+    <div class="card"><b><em>L</em>Líbero</b><p>Especialista en defensa y recepción. Sustituye al central en la zaga y no ataca desde arriba de la red. Su ficha lleva borde dorado.</p></div>
+  </div>
+  <div class="zrow">
+    <div class="card"><b>Frente a la red · Ataque</b><p>Z4 (izquierda), Z3 (centro), Z2 (derecha). Bloqueo y ataque.</p></div>
+    <div class="card"><b>Línea media · Transición</b><p>Z7 (izquierda), Z8 (centro), Z9 (derecha). Cobertura de ataque y apoyo.</p></div>
+    <div class="card"><b>Línea de fondo · Defensa y servicio</b><p>Z5 (izquierda), Z6 (centro), Z1 (derecha). El saque se hace desde Z1.</p></div>
+  </div>
+</section>
+<footer>Durga Wellness Sport &amp; Recreation · Volleyball Bulls · Prof. Säriel R.S.</footer>
+</div>
+
+<div id="modal" role="dialog" aria-label="Jugada exportada"><div>
+  <p>Mantén presionada la imagen para guardarla, o usa el botón.</p>
+  <img id="mimg" alt="Jugada exportada">
+  <p><a id="mdl" download="jugada-volleyball-bulls.png"><button>Descargar PNG</button></a> <button id="mx">Cerrar</button></p>
+</div></div>
+
+<script>
+const NS='http://www.w3.org/2000/svg',U=50,X0=60,Y0=60,NX=510;
+const $=s=>document.querySelector(s);
+const el=(n,a,p)=>{const e=document.createElementNS(NS,n);for(const k in a||{})e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e};
+const svg=$('#board'),FONT='Barlow Condensed,Arial Narrow,sans-serif';
+
+/* ---------- Cancha ---------- */
+el('rect',{width:1020,height:570,fill:'#0e3447'},svg);
+el('rect',{x:X0,y:Y0,width:900,height:450,fill:'#2a9d8f'},svg);
+const gZ=el('g',{},svg),gN=el('g',{id:'nums'},svg);
+const colsL=[[60,[5,6,1],0],[210,[7,8,9],1],[360,[4,3,2],2]],colsR=[[510,[2,3,4],2],[660,[9,8,7],1],[810,[1,6,5],0]];
+const names=['Defensa','Transición','Ataque'];
+[...colsL,...colsR].forEach(([x,zs,k])=>zs.forEach((z,r)=>{
+  const y=Y0+r*150;
+  el('rect',{x,y,width:150,height:150,fill:'#fff','fill-opacity':[0,.06,.13][k],stroke:'#fff','stroke-opacity':.55,'stroke-width':1.5,'stroke-dasharray':'7 6'},gZ);
+  const t=el('text',{x:x+75,y:y+68,'text-anchor':'middle','dominant-baseline':'central','font-size':66,'font-weight':800,'font-family':FONT,fill:'#fff','fill-opacity':.32},gN);t.textContent=z;
+  const s=el('text',{x:x+75,y:y+118,'text-anchor':'middle','font-size':14,'font-family':FONT,'font-weight':600,fill:'#fff','fill-opacity':.5},gN);s.textContent=names[k];
+}));
+const ln=(x1,y1,x2,y2,a)=>el('line',Object.assign({x1,y1,x2,y2,stroke:'#fff','stroke-width':4,'stroke-linecap':'round'},a),svg);
+el('rect',{x:X0,y:Y0,width:900,height:450,fill:'none',stroke:'#fff','stroke-width':4},svg);
+ln(360,Y0,360,510);ln(660,Y0,660,510);          // líneas de ataque (3 m)
+ln(NX,44,NX,526,{stroke:'#e2e8f0','stroke-width':6,'stroke-dasharray':'2 3'}); // red
+[[44,'#1e293b'],[526,'#1e293b']].forEach(([y,c])=>el('circle',{cx:NX,cy:y,r:7,fill:c,stroke:'#fff','stroke-width':2},svg));
+[[48,72],[498,522]].forEach(([a,b])=>{ln(NX,a,NX,b,{'stroke-width':9,'stroke-linecap':'butt'});ln(NX,a,NX,b,{stroke:'#dc2626','stroke-width':9,'stroke-linecap':'butt','stroke-dasharray':'6 6'})}); // antenas
+const lab=(x,y,t,c)=>{const e=el('text',{x,y,'text-anchor':'middle','font-size':20,'font-weight':700,'font-family':FONT,fill:c,'letter-spacing':1},svg);e.textContent=t};
+lab(285,34,'EQUIPO AZUL','#93c5fd');lab(735,34,'EQUIPO ROJO','#fca5a5');
+lab(360,548,'Línea de ataque · 3 m','#cfe7ee');lab(660,548,'Línea de ataque · 3 m','#cfe7ee');lab(510,562,'Red · 9 m × 18 m','#7fb0be');
+
+const gS=el('g',{id:'strokes'},svg),gT=el('g',{id:'toks'},svg);
+
+/* ---------- Fichas ---------- */
+const ROLES=['S','OH','MB','OP','OH','MB'],C=[1,6,5,4,3,2];
+const COL={blue:'#2563eb',red:'#dc2626'},toks={blue:[],red:[]};
+function setPos(g,x,y){g.px=x;g.py=y;g.style.transform=`translate(${x}px,${y}px)`}
+['blue','red'].forEach(t=>{for(let i=0;i<6;i++){
+  const g=el('g',{class:'tok'},gT);
+  g.circle=el('circle',{r:22,fill:COL[t],stroke:'#fff','stroke-width':3},g);
+  g.txt=el('text',{'text-anchor':'middle','dominant-baseline':'central','font-size':17,'font-weight':800,'font-family':FONT,fill:'#fff','pointer-events':'none'},g);
+  g.bdg=el('g',{transform:'translate(16,-16)'},g);
+  el('circle',{r:9,fill:'#0f172a',stroke:'#fff','stroke-width':1.5},g.bdg);
+  const n=el('text',{'text-anchor':'middle','dominant-baseline':'central','font-size':11,'font-weight':700,'font-family':FONT,fill:'#fff'},g.bdg);n.textContent=i+1;
+  g.team=t;g.idx=i;toks[t].push(g);
+}});
+const ball=el('g',{id:'ball'},gT);
+el('circle',{r:15,fill:'#fff7d1',stroke:'#1e3a8a','stroke-width':2.5},ball);
+['M-14 -4Q0 -11 14 -4','M-14 4Q0 11 14 4','M-5 -14Q-12 0 -5 14','M5 -14Q12 0 5 14'].forEach(d=>el('path',{d,fill:'none',stroke:'#2563eb','stroke-width':1.6},ball));
+setPos(ball,270,285);
+
+/* ---------- Formaciones ---------- */
+const ZC={4:[1.5,1.5],3:[1.5,4.5],2:[1.5,7.5],7:[4.5,1.5],8:[4.5,4.5],9:[4.5,7.5],5:[7.5,1.5],6:[7.5,4.5],1:[7.5,7.5]};
+const FM={
+ recv:{S:[1.3,6.9],z:{4:[3.4,1.2],3:[2.2,4.5],2:[3.4,7.8],5:[7,2.2],6:[5.6,4.5],1:[7,6.8]}},
+ blk2:{z:{4:[.9,2.4],3:[.9,3.9],2:[2.8,7.6],5:[6.3,1.2],6:[7.2,4.2],1:[6,7.4]}},
+ blk1:{z:{4:[.9,1.6],3:[3,3.8],2:[2.6,7.6],5:[6,2],6:[6.8,4.5],1:[6,7.2]}}};
+const px=(t,d,l)=>t==='blue'?[NX-d*U,Y0+l*U]:[NX+d*U,510-l*U];
+let lay={z:true,p:true};
+function labels(){toks.blue.concat(toks.red).forEach(g=>{
+  g.txt.textContent=lay.p?g.role:g.idx+1;g.bdg.style.display=lay.p?'':'none';
+  g.circle.setAttribute('stroke',g.role==='L'?'#fbbf24':'#fff');g.circle.setAttribute('stroke-width',g.role==='L'?5:3)})}
+function apply(team,anim=true){
+  const f=$('#fm').value,r=+$('#rot').value;
+  toks[team].forEach((g,i)=>{
+    const zone=C[(C.indexOf(i+1)+r)%6];
+    let d=f==='base'?ZC[zone]:(i===0&&FM[f].S?FM[f].S:FM[f].z[zone]);
+    if(!d)d=ZC[zone];
+    const [x,y]=px(team,d[0],d[1]);
+    g.role=(ROLES[i]==='MB'&&[1,5,6].includes(zone))?'L':ROLES[i];
+    if(anim)g.classList.add('anim');setPos(g,x,y);
+    if(anim)setTimeout(()=>g.classList.remove('anim'),650);
+  });labels()}
+function applySel(){const t=$('#tm').value;(t==='both'?['blue','red']:[t]).forEach(x=>apply(x))}
+['fm','rot','tm'].forEach(i=>$('#'+i).addEventListener('change',applySel));
+$('#reset').onclick=()=>{$('#fm').value='base';$('#rot').value='0';$('#tm').value='both';applySel();setPos(ball,270,285);clearAll()};
+apply('blue',false);apply('red',false);
+
+/* ---------- Capas ---------- */
+$('#lz').onchange=e=>{lay.z=e.target.checked;gN.style.display=lay.z?'':'none'};
+$('#lp').onchange=e=>{lay.p=e.target.checked;labels()};
+
+/* ---------- Herramientas ---------- */
+let mode='move',color='#fde047',wd=5,cur=null,drag=null,hist=[];
+$('#modes').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;mode=b.dataset.m;
+  document.querySelectorAll('#modes button').forEach(x=>x.setAttribute('aria-pressed',x===b));
+  svg.classList.toggle('mv',mode==='move');svg.classList.toggle('er',mode==='erase')});
+const sws=['#fde047','#ffffff','#111827','#60a5fa','#f87171','#4ade80','#fb923c'],cbox=$('#colors');
+sws.forEach((c,i)=>{const b=document.createElement('button');b.className='sw';b.style.background=c;b.setAttribute('aria-label','Color '+c);b.setAttribute('aria-pressed',i===0);
+  b.onclick=()=>pick(c);cbox.appendChild(b)});
+const ci=document.createElement('input');ci.type='color';ci.value='#fde047';ci.setAttribute('aria-label','Color personalizado');ci.oninput=()=>pick(ci.value);cbox.appendChild(ci);
+function pick(c){color=c;cbox.querySelectorAll('.sw').forEach((b,i)=>b.setAttribute('aria-pressed',sws[i]===c))}
+$('#w').oninput=e=>wd=+e.target.value;
+function clearAll(){hist.forEach(h=>h.remove());hist=[]}
+$('#clear').onclick=clearAll;
+$('#undo').onclick=()=>{const h=hist.pop();if(h)h.remove()};
+
+const pt=e=>{const p=svg.createSVGPoint();p.x=e.clientX;p.y=e.clientY;const q=p.matrixTransform(svg.getScreenCTM().inverse());return[q.x,q.y]};
+function head(x1,y1,x2,y2,w){const a=Math.atan2(y2-y1,x2-x1),L=12+w*2.2,s=.45;
+  return [[x2,y2],[x2-L*Math.cos(a-s),y2-L*Math.sin(a-s)],[x2-L*Math.cos(a+s),y2-L*Math.sin(a+s)]].map(p=>p.join(',')).join(' ')}
+function eraseAt(e){const o=[[0,0],[9,0],[-9,0],[0,9],[0,-9]];
+  for(const [dx,dy] of o){const s=document.elementFromPoint(e.clientX+dx,e.clientY+dy);const k=s&&s.closest&&s.closest('.stk');
+    if(k&&hist.includes(k)){k.remove();hist.splice(hist.indexOf(k),1);return}}}
+
+svg.addEventListener('pointerdown',e=>{
+  const [x,y]=pt(e);
+  if(mode==='move'){const t=e.target.closest('.tok,#ball');if(!t)return;
+    t.classList.remove('anim');drag={t,dx:t.px-x,dy:t.py-y};svg.setPointerCapture(e.pointerId);gT.appendChild(t);gT.appendChild(ball);return}
+  svg.setPointerCapture(e.pointerId);
+  if(mode==='erase'){drag='erase';eraseAt(e);return}
+  const st={fill:'none',stroke:color,'stroke-width':wd,'stroke-linecap':'round','stroke-linejoin':'round'};
+  if(mode==='pen'){cur=el('path',Object.assign({d:`M${x} ${y}`,class:'stk'},st),gS);cur.pts=`M${x} ${y}`}
+  else{cur=el('g',{class:'stk'},gS);cur.a=[x,y];cur.l=el('line',Object.assign({x1:x,y1:y,x2:x,y2:y},st),cur);
+    cur.h=el('polygon',{points:'',fill:color,stroke:color,'stroke-width':1,'stroke-linejoin':'round'},cur)}
+  hist.push(cur)});
+svg.addEventListener('pointermove',e=>{
+  const [x,y]=pt(e);
+  if(drag==='erase'){eraseAt(e);return}
+  if(drag){setPos(drag.t,Math.min(1000,Math.max(20,x+drag.dx)),Math.min(550,Math.max(20,y+drag.dy)));return}
+  if(!cur)return;
+  if(mode==='pen'){cur.pts+=` L${x.toFixed(1)} ${y.toFixed(1)}`;cur.setAttribute('d',cur.pts)}
+  else{cur.l.setAttribute('x2',x);cur.l.setAttribute('y2',y);cur.h.setAttribute('points',head(cur.a[0],cur.a[1],x,y,wd))}});
+const end=()=>{if(cur&&mode==='arrow'&&!cur.h.getAttribute('points')){cur.remove();hist.pop()}cur=null;drag=null};
+svg.addEventListener('pointerup',end);svg.addEventListener('pointercancel',end);
+
+/* ---------- Exportar jugada ---------- */
+const modal=$('#modal');$('#mx').onclick=()=>modal.classList.remove('on');
+$('#exp').onclick=async()=>{
+  const c=svg.cloneNode(true);c.setAttribute('xmlns',NS);c.setAttribute('width',1020);c.setAttribute('height',570);
+  const img=new Image();
+  await new Promise((ok,ko)=>{img.onload=ok;img.onerror=ko;img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(new XMLSerializer().serializeToString(c))}).catch(()=>{});
+  const S=2,W=1020*S,H0=110*S,B=570*S,F=40*S,cv=document.createElement('canvas');cv.width=W;cv.height=H0+B+F;
+  const x=cv.getContext('2d');
+  const g=x.createLinearGradient(0,0,W,0);g.addColorStop(0,'#0b1220');g.addColorStop(1,'#1c2740');
+  x.fillStyle=g;x.fillRect(0,0,cv.width,cv.height);
+  const ag=x.createLinearGradient(0,0,0,H0);ag.addColorStop(0,'#f4b942');ag.addColorStop(1,'#ff7a3d');x.fillStyle=ag;x.fillRect(0,0,16,H0);
+  x.fillStyle='#fff';x.font=`800 ${34*S}px ${FONT}`;x.fillText('Durga Wellness Sport & Recreation',34*S,48*S);
+  x.fillStyle='#f4b942';x.font=`700 ${22*S}px ${FONT}`;x.fillText('VOLLEYBALL BULLS',34*S,78*S);
+  x.fillStyle='#cbd5e1';x.font=`600 ${15*S}px ${FONT}`;x.fillText('Prof. Säriel R.S. · Educador Físico · Volleyball Coach & Basketball Coach',34*S,100*S);
+  if(img.complete&&img.naturalWidth)x.drawImage(img,0,H0,W,B);
+  x.save();x.translate(W/2,H0+B/2);x.rotate(-.32);x.textAlign='center';x.fillStyle='rgba(255,255,255,.16)';x.font=`800 ${46*S}px ${FONT}`;
+  [-90,0,90].forEach(o=>x.fillText('DURGA WELLNESS · VOLLEYBALL BULLS',0,o*S));x.restore();
+  x.fillStyle='#9fb0c8';x.font=`500 ${14*S}px ${FONT}`;x.textAlign='left';
+  x.fillText(`${$('#fm').selectedOptions[0].text} · ${$('#rot').selectedOptions[0].text}`,24*S,H0+B+26*S);
+  x.textAlign='right';x.fillText(new Date().toLocaleDateString('es-CR'),W-24*S,H0+B+26*S);
+  cv.toBlob(async blob=>{
+    const dl=window.claude?await window.claude.use('downloads').catch(()=>null):null;
+    if(dl){try{await dl.save({filename:'jugada-volleyball-bulls.png',data:blob});return}catch(er){if(er&&er.code==='declined')return}}
+    const u=URL.createObjectURL(blob);$('#mimg').src=u;$('#mdl').href=u;modal.classList.add('on')},'image/png');
+};
+</script>
+</body>
+</html>
